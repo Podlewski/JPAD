@@ -33,7 +33,7 @@ hist = sns.distplot(data.births,
 hist.axvline(BIRTHS_HYPOTHESIS, c='r', label="Hypothesis value")
 
 plt.xlabel("Number of births per day")
-plt.ylabel("Frequency of occurrence")
+plt.ylabel("Frequency")
 plt.legend()
 
 plt.savefig("histogram.png")

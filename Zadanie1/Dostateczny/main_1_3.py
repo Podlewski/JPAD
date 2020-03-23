@@ -36,7 +36,7 @@ column_two = dataframe[column_two_name]
 sns.distplot(column_one, bins=10, kde=False, color="c", label=column_one_name)
 sns.distplot(column_two, bins=10, kde=False, color="y", label=column_two_name)
 
-plt.xlabel("Value")
+plt.xlabel("Abalone attribute value")
 plt.ylabel("Frequency")
 
 plt.legend()
