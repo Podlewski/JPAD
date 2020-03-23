@@ -33,14 +33,13 @@ column_one = dataframe[column_one_name]
 column_two = dataframe[column_two_name]
 
 
-sns.distplot(column_one, bins=10, kde=False, color="c", label=column_one_name)
+sns.distplot(column_one, bins=10, kde=False,color="c", label=column_one_name)
 sns.distplot(column_two, bins=10, kde=False, color="y", label=column_two_name)
 
 plt.xlabel("Abalone attribute value")
 plt.ylabel("Frequency")
-
 plt.legend()
 
-plt.savefig("plot.png")
+plt.savefig("histogram.png")
 plt.show()
 

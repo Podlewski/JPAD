@@ -37,5 +37,4 @@ plt.ylabel("Frequency")
 plt.legend()
 
 plt.savefig("histogram.png")
-
-plt.show(hist)
+plt.show()
