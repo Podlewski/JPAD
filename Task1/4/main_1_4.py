@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def getBucket(row):
-    return math.floor(row.births / 500) * 500
+    return math.floor(row.births / 250) * 250
 
 
 BIRTHS_HYPOTHESIS = 10000
