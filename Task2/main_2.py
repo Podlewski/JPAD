@@ -32,8 +32,14 @@ if parsed_arguments.statistics is True:
         print(label + '\t' + str(round(data.var(), 6)))
 
 else:
-    first_column_name = correlation.index.get_level_values(0)[0]
-    second_column_name = correlation.index.get_level_values(0)[1]
+
+    if parsed_arguments.columns is None:
+        first_column_name = correlation.index.get_level_values(0)[0]
+        second_column_name = correlation.index.get_level_values(0)[1]
+    
+    else:
+        first_column_name = dataframe.columns[parsed_arguments.columns[0]]
+        second_column_name = dataframe.columns[parsed_arguments.columns[1]]
 
     X = df_no_nans[first_column_name].values.reshape(-1, 1)
     Y = df_no_nans[second_column_name].values.reshape(-1, 1)
@@ -42,7 +48,19 @@ else:
     linear_regressor.fit(X, Y)
     Y_pred = linear_regressor.predict(X)
 
-    plt.scatter(X, Y) 
+    print('\nDATASET WITHOUT NANS:\n')
+
+    print("Regressor coeficient: " + str(linear_regressor.coef_))
+
+    for data, name in [X, first_column_name], [Y, second_column_name]:
+        print('\n' + name)
+        print("  Mean:    %s" % round(data.mean(), 6))
+        print("  Std dev: %s" % round(data.std(), 6))
+        print("  Q1:      %s" % round(np.percentile(data, 25), 6))
+        print("  Q2:      %s" % round(np.percentile(data, 50), 6))
+        print("  Q3:      %s" % round(np.percentile(data, 75), 6))
+
+    plt.scatter(X, Y, color='blue') 
     plt.plot(X, Y_pred, color='red') 
     plt.xlabel(first_column_name)  
     plt.ylabel(second_column_name)  
