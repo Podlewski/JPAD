@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
 from argument_parser import ArgumentParser
+from fill_methods import fill_dataframe, get_name
 
-parsed_arguments = ArgumentParser().get_arguments()
+args = ArgumentParser().get_arguments()
 
 dataframe = pd.read_csv('StoneFlakes.dat', sep=',', header=0,
                         na_values='?', dtype=float)
@@ -18,7 +19,7 @@ correlation = df_no_nans.corr().stack()
 correlation = correlation[correlation.index.get_level_values(0) != correlation.index.get_level_values(1)]
 correlation = correlation.sort_values(ascending = False).head(len(dataframe.columns) * 2)[0::2]
 
-if parsed_arguments.statistics is True:
+if args.statistics is True:
 
     percent_missing = dataframe.isnull().sum() * 100 / len(dataframe)
     print('\nMISSING DATA PERCENT:\n')
@@ -33,35 +34,51 @@ if parsed_arguments.statistics is True:
 
 else:
 
-    if parsed_arguments.columns is None:
-        first_column_name = correlation.index.get_level_values(0)[0]
-        second_column_name = correlation.index.get_level_values(0)[1]
-    
-    else:
-        first_column_name = dataframe.columns[parsed_arguments.columns[0]]
-        second_column_name = dataframe.columns[parsed_arguments.columns[1]]
+    df_filled = fill_dataframe(dataframe, args.fill_method)
 
-    X = df_no_nans[first_column_name].values.reshape(-1, 1)
-    Y = df_no_nans[second_column_name].values.reshape(-1, 1)
+    for df, df_name in [df_no_nans, 'Dataset without nans'], [df_filled, get_name(args.fill_method)]:
 
-    linear_regressor = LinearRegression()
-    linear_regressor.fit(X, Y)
-    Y_pred = linear_regressor.predict(X)
+        if args.columns is None:
+            first_column_name = correlation.index.get_level_values(0)[0]
+            second_column_name = correlation.index.get_level_values(0)[1]
+        
+        else:
+            first_column_name = dataframe.columns[args.columns[0]]
+            second_column_name = dataframe.columns[args.columns[1]]
 
-    print('\nDATASET WITHOUT NANS:\n')
+        X = df[first_column_name].values.reshape(-1, 1)
+        Y = df[second_column_name].values.reshape(-1, 1)
 
-    print("Regressor coeficient: " + str(linear_regressor.coef_))
+        linear_regressor = LinearRegression()
+        linear_regressor.fit(X, Y)
+        Y_pred = linear_regressor.predict(X)
 
-    for data, name in [X, first_column_name], [Y, second_column_name]:
-        print('\n' + name)
-        print("  Mean:    %s" % round(data.mean(), 6))
-        print("  Std dev: %s" % round(data.std(), 6))
-        print("  Q1:      %s" % round(np.percentile(data, 25), 6))
-        print("  Q2:      %s" % round(np.percentile(data, 50), 6))
-        print("  Q3:      %s" % round(np.percentile(data, 75), 6))
+        print('\n' + df_name.upper() + '\n')
 
-    plt.scatter(X, Y, color='blue') 
-    plt.plot(X, Y_pred, color='red') 
-    plt.xlabel(first_column_name)  
-    plt.ylabel(second_column_name)  
-    plt.show()
+        print('Regressor coeficient: ' + str(linear_regressor.coef_))
+
+        for data, name in [X, first_column_name], [Y, second_column_name]:
+
+            print('\n' + name)
+            print('  Mean:    %s' % round(data.mean(), 6))
+            print('  Std dev: %s' % round(data.std(), 6))
+            print('  Q1:      %s' % round(np.percentile(data, 25), 6))
+            print('  Q2:      %s' % round(np.percentile(data, 50), 6))
+            print('  Q3:      %s' % round(np.percentile(data, 75), 6))
+
+        plt.scatter(X, Y, color='blue') 
+        plt.plot(X, Y_pred, color='red') 
+        plt.xlabel(first_column_name)  
+        plt.ylabel(second_column_name)  
+
+        if df_name is 'Dataset without nans':
+            plt.savefig(str(args.missing_data_percent) + '_0.png')
+
+        else:
+            plt.savefig(str(args.missing_data_percent) + '_' +
+                        str(args.fill_method) + '.png')
+
+        if args.show_plot is True:
+            plt.show()
+
+        plt.clf()

@@ -1,5 +1,6 @@
 import argparse
 
+from fill_methods import print_methods_names
 
 class ArgumentParser:
 
@@ -14,15 +15,13 @@ class ArgumentParser:
                         '\n  Paweł Galewicz\t234053'
                         '\n  Karol Podlewski\t234106')
 
-        self.parser.add_argument(metavar='N', dest='fill_method', type=int,
-                                 default=0, help='Select fill method:'
-                                      '\n  [1] - Mean imputation,'
-                                      '\n  [2] - Interpolation'
-                                      '\n  [3] - Hot-deck'
-                                      '\n  [4] - Values from regression')
+        self.parser.add_argument('-f', metavar='N', dest='fill_method',
+                                 type=int, default=1, choices=range(1,5),
+                                 help='Select fill method:\n' +
+                                      print_methods_names('  '))
 
         self.parser.add_argument('-m', metavar='N', dest='missing_data_percent',
-                                 type=int, default=None,
+                                 type=int, default=None, choices=range(1, 101),
                                  help='Set percent of missing data')
 
         self.parser.add_argument('-c', metavar='N', nargs=2, dest='columns',
@@ -31,9 +30,13 @@ class ArgumentParser:
                                       '(by default columns with highest '
                                       'correlation are selected)')
 
-        self.parser.add_argument('--stats', dest='statistics', 
-                                 action='store_const', const=True, default=False,
+        self.parser.add_argument('--stats', dest='statistics', default=False, 
+                                 action='store_const', const=True,
                                  help='Just show statistics for dataset')
+
+        self.parser.add_argument('--show', dest='show_plot', default=False,
+                                 action='store_const', const=True, 
+                                 help='Displays plot')                               
 
         self.args = self.parser.parse_args()
 
