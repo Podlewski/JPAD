@@ -4,37 +4,46 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
-df_orginal = pd.read_csv("StoneFlakes.dat", sep=",", header=0,
-                         na_values="?", dtype=float)
+from argument_parser import ArgumentParser
 
-percent_missing = df_orginal.isnull().sum() * 100 / len(df_orginal)
-print(percent_missing)
-corr = df_orginal.corr().stack()
-corr = corr[corr.index.get_level_values(0) != corr.index.get_level_values(1)]
-print(corr.sort_values(ascending = False).head(10))
+parsed_arguments = ArgumentParser().get_arguments()
 
-df_wo_na = df_orginal.dropna()
-df_wo_na = df_wo_na.reset_index(drop=True).astype(int)
+dataframe = pd.read_csv('StoneFlakes.dat', sep=',', header=0,
+                        na_values='?', dtype=float)
 
-corr = df_orginal.corr().stack()
-corr = corr[corr.index.get_level_values(0) != corr.index.get_level_values(1)]
-corr = corr.sort_values(ascending = False)
+df_no_nans = dataframe.dropna()
+df_no_nans = df_no_nans.reset_index(drop=True).astype(int)
 
-col1_name = corr.index.get_level_values(0)[0]
-col2_name = corr.index.get_level_values(0)[1]
+correlation = df_no_nans.corr().stack()
+correlation = correlation[correlation.index.get_level_values(0) != correlation.index.get_level_values(1)]
+correlation = correlation.sort_values(ascending = False).head(len(dataframe.columns) * 2)[0::2]
 
-print('Var1: ' + np.var(df_orginal[col1_name]).astype(str))
-print('Var2: ' + np.var(df_orginal[col1_name]).astype(str))
+if parsed_arguments.statistics is True:
 
-X = df_wo_na[col1_name].values.reshape(-1, 1)
-Y = df_wo_na[col2_name].values.reshape(-1, 1)
+    percent_missing = dataframe.isnull().sum() * 100 / len(dataframe)
+    print('\nMISSING DATA PERCENT:\n')
+    print(percent_missing)
+        
+    print('\n\nMOST CORRELATED COLUMNS:\n')
+    print(correlation)
 
-linear_regressor = LinearRegression()
-linear_regressor.fit(X, Y)
-Y_pred = linear_regressor.predict(X)
+    print('\n\nVARIANCE:\n')
+    for label, data in df_no_nans.items():
+        print(label + '\t' + str(round(data.var(), 6)))
 
-plt.scatter(X, Y) 
-plt.plot(X, Y_pred, color='red') 
-plt.xlabel(col1_name)  
-plt.ylabel(col2_name)  
-plt.show()
+else:
+    first_column_name = correlation.index.get_level_values(0)[0]
+    second_column_name = correlation.index.get_level_values(0)[1]
+
+    X = df_no_nans[first_column_name].values.reshape(-1, 1)
+    Y = df_no_nans[second_column_name].values.reshape(-1, 1)
+
+    linear_regressor = LinearRegression()
+    linear_regressor.fit(X, Y)
+    Y_pred = linear_regressor.predict(X)
+
+    plt.scatter(X, Y) 
+    plt.plot(X, Y_pred, color='red') 
+    plt.xlabel(first_column_name)  
+    plt.ylabel(second_column_name)  
+    plt.show()
