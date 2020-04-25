@@ -30,10 +30,6 @@ class ArgumentParser:
                                       '(by default columns with highest '
                                       'correlation are selected)')
 
-        # self.parser.add_argument('--stats', dest='statistics', default=False,
-        #                          action='store_const', const=True,
-        #                          help='Just show statistics for dataset')
-
         self.parser.add_argument('--show', dest='show_plot', default=False,
                                  action='store_const', const=True, 
                                  help='Displays plot')                               

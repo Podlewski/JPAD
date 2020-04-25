@@ -20,19 +20,18 @@ def create_nans(dataframe, nan_percentage):
     return dataframe.mask(nan_matrix)
 
 
-def print_statistics(dataframe, header):
-    print("\n~~~~~~ " + header)
-
-    percent_missing = dataframe.isnull().sum() * 100 / len(dataframe)
-    print('Missing data percentage:')
-    print(percent_missing)
-
-    print('\nVariance:')
+def print_statistics(dataframe):
     for label, data in dataframe.items():
-       print(label + '\t' + str(round(data.var(), 6)))
+        print('\n' + label)
+        percent_missing = data.isnull().sum() * 100 / len(dataframe)
+        print('  %% missing:\t%s' % round(percent_missing, 6))
+        print('  Variance: \t%s' % round(data.var(), 6))
+
 
 
 def print_regression_statistics(dataframe, header, filename, show_plot=False):
+    print('\n\n~~~~~~ ' + header + ':')
+
     first_column_name = dataframe.columns[0]
     second_column_name = dataframe.columns[1]
     X = dataframe[first_column_name].values.reshape(-1, 1)
@@ -42,18 +41,15 @@ def print_regression_statistics(dataframe, header, filename, show_plot=False):
     linear_regressor.fit(X, Y)
     Y_pred = linear_regressor.predict(X)
 
-    print("\n~~~~~~ " + header)
+    for data, label in [X, first_column_name], [Y, second_column_name]:
+        print('\n' + label)
+        print('  Mean:     \t%s' % round(data.mean(), 6))
+        print('  Std. dev.:\t%s' % round(data.std(), 6))
+        print('  Quantile1:\t%s' % round(np.percentile(data, 25), 6))
+        print('  Quantile2:\t%s' % round(np.percentile(data, 50), 6))
+        print('  Quantile3:\t%s' % round(np.percentile(data, 75), 6))
 
-    print('Regressor coeficient: ' + str(linear_regressor.coef_))
-
-    for data, name in [X, first_column_name], [Y, second_column_name]:
-
-        print('\n' + name)
-        print('  Mean:    %s' % round(data.mean(), 6))
-        print('  Std dev: %s' % round(data.std(), 6))
-        print('  Q1:      %s' % round(np.percentile(data, 25), 6))
-        print('  Q2:      %s' % round(np.percentile(data, 50), 6))
-        print('  Q3:      %s' % round(np.percentile(data, 75), 6))
+    print('\nRegressor coeficient: ' + str(linear_regressor.coef_))
 
     plt.scatter(X, Y, color='blue')
     plt.plot(X, Y_pred, color='red')

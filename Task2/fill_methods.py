@@ -23,7 +23,7 @@ def fill_dataframe(dataframe, method):
     
 
 def get_name(method):
-    return names[method]
+    return names[method].replace(' ', '_')
 
 
 def print_methods_names(extra_spacing = ''):
