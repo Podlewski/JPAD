@@ -8,17 +8,17 @@ names = {1: 'Mean imputation',
 
 
 def fill_dataframe(dataframe, method):
-    if method is 1:
+    if method == 1:
         return dataframe.fillna(dataframe.mean())
 
-    elif method is 2:
+    elif method == 2:
         return dataframe.fillna(dataframe.interpolate())
 
-    elif method is 3:
+    elif method == 3:
         # hot-deck, LOCF version
         return dataframe.fillna(method='ffill', inplace=True)
 
-    elif method is 4:
+    elif method == 4:
         pass
     
 

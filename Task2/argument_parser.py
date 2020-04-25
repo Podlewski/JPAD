@@ -21,7 +21,7 @@ class ArgumentParser:
                                       print_methods_names('  '))
 
         self.parser.add_argument('-m', metavar='N', dest='missing_data_percent',
-                                 type=int, default=None, choices=range(1, 101),
+                                 type=int, default=5, choices=range(1, 101),
                                  help='Set percent of missing data')
 
         self.parser.add_argument('-c', metavar='N', nargs=2, dest='columns',
@@ -30,9 +30,9 @@ class ArgumentParser:
                                       '(by default columns with highest '
                                       'correlation are selected)')
 
-        self.parser.add_argument('--stats', dest='statistics', default=False, 
-                                 action='store_const', const=True,
-                                 help='Just show statistics for dataset')
+        # self.parser.add_argument('--stats', dest='statistics', default=False,
+        #                          action='store_const', const=True,
+        #                          help='Just show statistics for dataset')
 
         self.parser.add_argument('--show', dest='show_plot', default=False,
                                  action='store_const', const=True, 
