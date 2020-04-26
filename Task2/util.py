@@ -17,6 +17,7 @@ def get_correlation(dataframe):
 
 def create_nans(dataframe, nan_percentage):
     nan_matrix = np.random.random(dataframe.shape) < float(nan_percentage / 100)
+    nan_matrix[0] = [False for i in range(nan_matrix[0].size)]
     return dataframe.mask(nan_matrix)
 
 
