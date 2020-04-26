@@ -6,14 +6,16 @@ from util import *
 
 args = ArgumentParser().get_arguments()
 
-dataframe = pd.read_csv("kc_house_data.csv")
+dataframe = pd.read_csv(args.file_name, sep=',', header=0, na_values='?')
 
-df_no_nans = drop_nans(dataframe)
-correlation = get_correlation(df_no_nans)
+# df_no_nans = drop_nans(dataframe)
+# correlation = get_correlation(df_no_nans)
 
 if args.columns is None:
-    first_column_name = correlation.index.get_level_values(0)[0]
-    second_column_name = correlation.index.get_level_values(0)[1]
+    # first_column_name = correlation.index.get_level_values(0)[0]
+    # second_column_name = correlation.index.get_level_values(0)[1]
+    first_column_name = dataframe.columns[-2]
+    second_column_name = dataframe.columns[-1]
 
 else:
     first_column_name = dataframe.columns[args.columns[0]]

@@ -28,7 +28,6 @@ def print_statistics(dataframe):
         print('  Variance: \t%s' % round(data.var(), 6))
 
 
-
 def print_regression_statistics(dataframe, header, filename, show_plot=False):
     print('\n\n~~~~~~ ' + header + ':')
 
@@ -42,12 +41,18 @@ def print_regression_statistics(dataframe, header, filename, show_plot=False):
     Y_pred = linear_regressor.predict(X)
 
     for data, label in [X, first_column_name], [Y, second_column_name]:
+        # print('\n' + label)
+        # print('  Mean:     \t%s' % round(data.mean(), 6))
+        # print('  Std. dev.:\t%s' % round(data.std(), 6))
+        # print('  Quantile1:\t%s' % round(np.percentile(data, 25), 6))
+        # print('  Quantile2:\t%s' % round(np.percentile(data, 50), 6))
+        # print('  Quantile3:\t%s' % round(np.percentile(data, 75), 6))
         print('\n' + label)
-        print('  Mean:     \t%s' % round(data.mean(), 6))
-        print('  Std. dev.:\t%s' % round(data.std(), 6))
-        print('  Quantile1:\t%s' % round(np.percentile(data, 25), 6))
-        print('  Quantile2:\t%s' % round(np.percentile(data, 50), 6))
-        print('  Quantile3:\t%s' % round(np.percentile(data, 75), 6))
+        print('Mean\tStd. dev.\tQ1\tQ2\tQ3')
+        print(str(round(data.mean(),2))+'\t'+str(round(data.std(),2))+'\t'+
+              str(round(np.percentile(data,25),2))+'\t'+ 
+              str(round(np.percentile(data,50),2))+'\t'+ 
+              str(round(np.percentile(data,75),2)))
 
     print('\nRegressor coeficient: ' + str(linear_regressor.coef_))
 

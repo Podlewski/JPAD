@@ -25,7 +25,7 @@ class ArgumentParser:
                                  help='Set percent of missing data')
 
         self.parser.add_argument('-f', metavar='FILE', dest='file_name',
-                                 type=str, default='StoneFlakes.dat',
+                                 type=str, default='kc_house_data.csv',
                                  help='Specify file name')
 
         self.parser.add_argument('-c', metavar='N', nargs=2, dest='columns',

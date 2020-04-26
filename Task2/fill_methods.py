@@ -18,7 +18,7 @@ def fill_dataframe(dataframe, method):
 
     elif method == 3:
         # hot-deck, LOCF version
-        return dataframe.fillna(method='ffill', inplace=True)
+        return dataframe.fillna(method='ffill')
 
     elif method == 4:
         df = drop_nans(dataframe)
