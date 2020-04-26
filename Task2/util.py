@@ -55,7 +55,8 @@ def print_regression_statistics(dataframe, header, filename, show_plot=False):
               str(round(np.percentile(data,50),2))+'\t'+ 
               str(round(np.percentile(data,75),2)))
 
-    print('\nRegressor coeficient: ' + str(linear_regressor.coef_))
+    print('\nRegressor coeficient:\t' + str(linear_regressor.coef_))
+    print('Regressor intercept:\t' + str(linear_regressor.intercept_))
 
     plt.scatter(X, Y, color='blue')
     plt.plot(X, Y_pred, color='red')
