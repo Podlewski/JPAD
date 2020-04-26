@@ -6,8 +6,7 @@ from util import *
 
 args = ArgumentParser().get_arguments()
 
-dataframe = pd.read_csv(args.file_name, sep=',', header=0,
-                        na_values='?', dtype=float)
+dataframe = pd.read_csv("kc_house_data.csv")
 
 df_no_nans = drop_nans(dataframe)
 correlation = get_correlation(df_no_nans)
@@ -19,6 +18,7 @@ if args.columns is None:
 else:
     first_column_name = dataframe.columns[args.columns[0]]
     second_column_name = dataframe.columns[args.columns[1]]
+
 
 columns = dataframe[[first_column_name, second_column_name]]
 columns_with_nans = create_nans(columns, args.missing_data_percent)

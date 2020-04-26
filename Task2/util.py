@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 
 def drop_nans(dataframe):
     ret = dataframe.dropna()
-    return ret.reset_index(drop=True).astype(int)
+    return ret.reset_index(drop=True)
 
 
 def get_correlation(dataframe):
