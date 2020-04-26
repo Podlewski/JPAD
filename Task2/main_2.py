@@ -6,7 +6,7 @@ from util import *
 
 args = ArgumentParser().get_arguments()
 
-dataframe = pd.read_csv('StoneFlakes.dat', sep=',', header=0,
+dataframe = pd.read_csv(args.file_name, sep=',', header=0,
                         na_values='?', dtype=float)
 
 df_no_nans = drop_nans(dataframe)
@@ -24,6 +24,11 @@ columns = dataframe[[first_column_name, second_column_name]]
 columns_with_nans = create_nans(columns, args.missing_data_percent)
 columns_no_nans = drop_nans(columns_with_nans)
 columns_filled = fill_dataframe(columns_with_nans, args.fill_method)
+
+if args.save_df is True:
+    df_with_nans = dataframe.drop([first_column_name, second_column_name], axis=1)
+    df_with_nans = df_with_nans.join(columns_with_nans)
+    save_dataframe_to_file(df_with_nans, args.file_name, args.missing_data_percent)
 
 print_statistics(columns_with_nans)
 

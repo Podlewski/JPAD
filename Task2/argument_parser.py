@@ -15,20 +15,28 @@ class ArgumentParser:
                         '\n  Paweł Galewicz\t234053'
                         '\n  Karol Podlewski\t234106')
 
-        self.parser.add_argument('-f', metavar='N', dest='fill_method',
+        self.parser.add_argument('-m', metavar='N', dest='fill_method',
                                  type=int, default=1, choices=range(1,5),
                                  help='Select fill method:\n' +
                                       print_methods_names('  '))
 
-        self.parser.add_argument('-m', metavar='N', dest='missing_data_percent',
-                                 type=int, default=5, choices=range(1, 101),
+        self.parser.add_argument('-p', metavar='N', dest='missing_data_percent',
+                                 type=int, default=0, choices=range(1, 100),
                                  help='Set percent of missing data')
+
+        self.parser.add_argument('-f', metavar='FILE', dest='file_name',
+                                 type=str, default='StoneFlakes.dat',
+                                 help='Specify file name')
 
         self.parser.add_argument('-c', metavar='N', nargs=2, dest='columns',
                                  type=int, default=None,
                                  help='Set dataset columns for program '
                                       '(by default columns with highest '
                                       'correlation are selected)')
+
+        self.parser.add_argument('--save', dest='save_df', default=False,
+                                 action='store_const', const=True, 
+                                 help='Save data with nulls into file')  
 
         self.parser.add_argument('--show', dest='show_plot', default=False,
                                  action='store_const', const=True, 

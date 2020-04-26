@@ -62,3 +62,7 @@ def print_regression_statistics(dataframe, header, filename, show_plot=False):
         plt.show()
 
     plt.clf()
+
+def save_dataframe_to_file(dataframe, file_name, missing_percent):
+    dataframe.to_csv(file_name.split('.',1)[0] + str(missing_percent) + '.' +
+                     file_name.split('.',1)[1], index=False, na_rep='?')
