@@ -15,3 +15,15 @@ def Pca(dataset):
     print('Explained variation per principal component: {}'
           .format(pca.explained_variance_ratio_))
     return pd.DataFrame(ds)
+
+def Variance(dataset, greatest):
+    var = dataset.var()
+    var = var.sort_values(ascending = greatest)
+
+    if greatest is True:
+        prefix = 'Greatest'
+    else:
+        prefix = 'Smallest'
+    print(prefix + ' variance: "{}", "{}"'.format(var.index[0], var.index[1]))
+
+    return dataset[[var.index[0], var.index[1]]]
