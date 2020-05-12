@@ -1,16 +1,26 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from sklearn.datasets import load_breast_cancer 
 
 from argument_parser import ArgumentParser
+from data_utils import Normalize, Pca
 from sgd import SGD
 
 
 args = ArgumentParser().get_arguments()
-data = pd.read_csv("pima-indians-diabetes.data", header=0)
+tf = args.training_fraction
 
-classifiers = [SGD(data, args.training_fraction, "Every column")]
-results = [[] for i in range(1)]
+breast = load_breast_cancer()
+data = pd.DataFrame(breast.data)
+labels = pd.DataFrame(breast.target)
+
+normalized_data = Normalize(data)
+pca_data = Pca(normalized_data)
+
+classifiers = [SGD(data, labels, tf, "Every column"),
+               SGD(pca_data, labels, tf, "PCA")]
+results = [[] for i in range(len(classifiers))]
 
 for i in range(args.iterations):
     for classifier, result in zip(classifiers, results):

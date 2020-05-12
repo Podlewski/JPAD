@@ -3,46 +3,42 @@ from sklearn import metrics, linear_model
 
 
 class SGD:
-    model = linear_model.SGDClassifier()
-    name = None
-    training_data = None
-    training_target = None
-    test_data = None
-    test_target = None
-    classes = None
-    prediction = None
 
-    def __init__(self, data, training_fraction, name, shuffle=False):
+    def __init__(self, data, labels, training_fraction, name, shuffle=False):
+        self.model = linear_model.SGDClassifier()
         if shuffle is True:
             data = data.sample(frac=1).reset_index(drop=True)
         partition_index = int(len(data.index) * training_fraction)
-        self.training_data = data.iloc[:partition_index, :-1].values
-        self.training_target = data.iloc[:partition_index, -1:].values.ravel()
-        self.test_data = data.iloc[partition_index + 1:, :-1].values
-        self.test_target = data.iloc[partition_index + 1:, -1:].values.ravel()
-        self.classes = unique(data.iloc[:, -1:].values.ravel())
+        self.training_data = data.iloc[:partition_index].values
+        self.training_labels = labels.iloc[:partition_index].values.ravel()
+        self.test_data = data.iloc[partition_index:].values
+        self.test_labels = labels.iloc[partition_index:].values.ravel()
+        self.unique_labels = unique(labels.values.ravel())
         self.name = name
 
     def train(self):
-        self.model.fit(self.training_data, self.training_target)
+        self.model.fit(self.training_data, self.training_labels)
 
     def train_one_epoch(self):
         self.model.partial_fit(self.training_data,
-                               self.training_target,
-                               self.classes)
+                               self.training_labels,
+                               self.unique_labels)
 
     def test(self):
         self.prediction = self.model.predict(self.test_data)
 
     def get_accuracy(self, digits=3):
         return round(metrics.accuracy_score(
-            self.test_target,
+            self.test_labels,
             self.prediction), digits)
 
     def train_and_get_accuracy(self):
         self.train_one_epoch()
         self.test()
         return self.get_accuracy()
+
+
+    # REMOVABLE
 
     def get_confusion_matrix(self):
         return metrics.confusion_matrix(
