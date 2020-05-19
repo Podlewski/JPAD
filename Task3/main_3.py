@@ -14,15 +14,12 @@ labels = pd.DataFrame(breast.target)
 pca_data = Pca(Normalize(data))
 gvar_data = Variance(data, False)
 svar_data = Variance(data, True)
+chi_data = ChiSquare(data, labels)
 
-# chi_data = ChiSquare(data, labels)
-
-datasets = [data, pca_data, gvar_data, svar_data]
-names = ['Every column', 'PCA', 'Greatest variance', 'Smallest variance']
+datasets = [data, pca_data, gvar_data, svar_data, chi_data]
+names = ['Every column', 'PCA', 'Greatest variance', 'Smallest variance', 'Chi Square']
 results = [[] for i in range(len(datasets))]
 training_percent = range(60, 91, 5)
-
-i = 0
 
 for dataset, name, result in zip(datasets, names, results):
     for tp in training_percent:
@@ -35,4 +32,4 @@ for dataset, name, result in zip(datasets, names, results):
 plt.xlabel('Training percent')
 plt.ylabel('Accuracy')
 plt.legend()
-plt.savefig('plot.png')
+plt.savefig('plot.png', dpi=300)

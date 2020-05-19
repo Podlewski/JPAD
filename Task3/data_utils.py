@@ -1,13 +1,19 @@
 import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
-from sklearn.feature_selection import chi2
+from sklearn.feature_selection import chi2, SelectKBest
 from sklearn.preprocessing import StandardScaler
 
 
 def ChiSquare(dataset, labels):
-    ds = chi2(dataset, labels)
-    print(pd.DataFrame(ds))
+    selector = SelectKBest(score_func=chi2, k=2)
+    selector.fit(dataset, labels)
+    values = selector.scores_[selector.get_support()]
+    columns = dataset.columns[selector.get_support()]
+    print('Chi square: "{}" ({}), "{}" ({})'
+          .format(columns[0], values[0], columns[1], values[1]))    
+
+    return pd.DataFrame(dataset[columns])
 
 def Normalize(dataset):
     ds = dataset.values
@@ -29,6 +35,6 @@ def Variance(dataset, smallest):
         prefix = 'Smallest'
     else:
         prefix = 'Greatest'
-    print(prefix + ' variance: "{}", "{}"'.format(ds.index[0], ds.index[1]))
-
+    print(prefix + ' variance: "{}" ({}), "{}" ({})'
+          .format(ds.index[0], ds[0], ds.index[1], ds[1]))
     return pd.DataFrame(dataset[[ds.index[0], ds.index[1]]])
